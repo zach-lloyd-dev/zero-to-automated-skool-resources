@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE 'rm\\s+-rf|rm\\s+-r\\s+/|--force|--hard|push.*-f|push.*--force|DROP\\s+TABLE|DROP\\s+DATABASE|:(){ :|:& };:|> /dev/sd|mkfs\\.|dd\\s+if='; then echo 'BLOCKED: This command matches a dangerous pattern. Find a safer approach or ask the user for explicit permission.' >&2; exit 2; fi",
+        "matcher": "Bash"
+      },
+      {
+        "type": "command",
+        "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE '\\.env|\\.env\\.local|credentials|secrets|password'; then echo 'CAUTION: This action involves a sensitive file. Proceed with care.' >&2; exit 1; fi",
+        "matcher": "Write"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "osascript -e 'display notification \"Claude Code finished and needs your attention\" with title \"Claude Code\" sound name \"Glass\"'"
+      }
+    ]
+  }
+}

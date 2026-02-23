@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "prompt",
+        "prompt": "Review the conversation above. Did the assistant fully address the user's most recent request? Check for:\n\n1. Missing steps or incomplete answers\n2. Code that was supposed to be written but wasn't\n3. Files that were supposed to be created or edited but weren't\n4. Questions the user asked that went unanswered\n5. Tasks that were acknowledged but not actually done\n\nIf anything is incomplete or missing, respond with a brief, specific note about what was missed (e.g., 'The CSS file was discussed but never created'). If everything looks complete and correct, respond with an empty string."
+      }
+    ]
+  }
+}

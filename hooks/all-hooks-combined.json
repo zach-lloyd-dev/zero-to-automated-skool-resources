@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo '--- GLOBAL CONTEXT ---'; cat ~/.claude/MEMORY.md 2>/dev/null; echo ''; echo '--- PROJECT CONTEXT ---'; cat ./CONTEXT.md 2>/dev/null; cat ./PROGRESS.md 2>/dev/null; echo ''; echo '--- GIT STATUS ---'; git branch --show-current 2>/dev/null; git log --oneline -3 2>/dev/null; echo ''; echo 'Session context loaded.'"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE 'rm\\s+-rf|rm\\s+-r\\s+/|--force|--hard|push.*-f|push.*--force|DROP\\s+TABLE|DROP\\s+DATABASE|:(){ :|:& };:|> /dev/sd|mkfs\\.|dd\\s+if='; then echo 'BLOCKED: This command matches a dangerous pattern. Find a safer approach or ask the user for explicit permission.' >&2; exit 2; fi",
+        "matcher": "Bash"
+      },
+      {
+        "type": "command",
+        "command": "if echo \"$CLAUDE_TOOL_INPUT\" | grep -qiE '\\.env|\\.env\\.local|credentials|secrets|password'; then echo 'CAUTION: This action involves a sensitive file. Proceed with care.' >&2; exit 1; fi",
+        "matcher": "Write"
+      }
+    ],
+    "Stop": [
+      {
+        "type": "prompt",
+        "prompt": "Review the conversation above. Did the assistant fully address the user's most recent request? Check for:\n\n1. Missing steps or incomplete answers\n2. Code that was supposed to be written but wasn't\n3. Files that were supposed to be created or edited but weren't\n4. Questions the user asked that went unanswered\n5. Tasks that were acknowledged but not actually done\n\nIf anything is incomplete or missing, respond with a brief, specific note about what was missed (e.g., 'The CSS file was discussed but never created'). If everything looks complete and correct, respond with an empty string."
+      },
+      {
+        "type": "command",
+        "command": "osascript -e 'display notification \"Claude Code finished and needs your attention\" with title \"Claude Code\" sound name \"Glass\"'"
+      }
+    ]
+  }
+}

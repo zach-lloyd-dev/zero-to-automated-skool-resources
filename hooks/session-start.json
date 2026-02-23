@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo '--- GLOBAL CONTEXT ---'; cat ~/.claude/MEMORY.md 2>/dev/null; echo ''; echo '--- PROJECT CONTEXT ---'; cat ./CONTEXT.md 2>/dev/null; cat ./PROGRESS.md 2>/dev/null; echo ''; echo '--- GIT STATUS ---'; git branch --show-current 2>/dev/null; git log --oneline -3 2>/dev/null; echo ''; echo 'Session context loaded.'"
+      }
+    ]
+  }
+}

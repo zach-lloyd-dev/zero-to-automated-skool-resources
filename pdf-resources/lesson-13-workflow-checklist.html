@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Workflow Checklist - Claude Code 101</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f8fafc, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: #94a3b8;
+    font-size: 16px;
+  }
+
+  /* Workflow Steps */
+  .workflow {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .workflow-step {
+    background: linear-gradient(135deg, #1e293b, #1e2a40);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .workflow-step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
+
+  .step-plan::before { background: #6366f1; }
+  .step-configure::before { background: #8b5cf6; }
+  .step-build::before { background: #06b6d4; }
+  .step-test::before { background: #f59e0b; }
+  .step-ship::before { background: #10b981; }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .step-plan .step-number { background: #6366f1; }
+  .step-configure .step-number { background: #8b5cf6; }
+  .step-build .step-number { background: #06b6d4; }
+  .step-test .step-number { background: #f59e0b; }
+  .step-ship .step-number { background: #10b981; }
+
+  .step-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f1f5f9;
+  }
+
+  .step-mode {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+
+  .mode-plan {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+  }
+
+  .mode-normal {
+    background: rgba(16, 185, 129, 0.15);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 54px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #cbd5e1;
+  }
+
+  .check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #475569;
+    border-radius: 4px;
+    margin-top: 1px;
+  }
+
+  .step-tip {
+    margin-top: 12px;
+    padding: 10px 16px;
+    padding-left: 54px;
+    font-size: 13px;
+    font-style: italic;
+    color: #64748b;
+  }
+
+  .step-tip strong {
+    color: #94a3b8;
+    font-style: normal;
+  }
+
+  /* Reference cards grid */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .ref-card {
+    background: linear-gradient(135deg, #1e293b, #1e2a40);
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .ref-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ref-card h3 .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .ref-card table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ref-card th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px 0;
+    border-bottom: 1px solid #334155;
+  }
+
+  .ref-card td {
+    font-size: 13px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+    vertical-align: top;
+    color: #94a3b8;
+  }
+
+  .ref-card td:first-child {
+    font-weight: 600;
+    color: #e2e8f0;
+    width: 40%;
+  }
+
+  .kbd {
+    display: inline-block;
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', monospace;
+    color: #f8fafc;
+  }
+
+  /* When to clear */
+  .clear-section {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 1px solid #6366f1;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .clear-section h3 {
+    color: #a5b4fc;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .clear-signals {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .signal {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #cbd5e1;
+  }
+
+  .signal::before {
+    content: '>';
+    color: #6366f1;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .footer {
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid #1e293b;
+    color: #475569;
+    font-size: 12px;
+  }
+
+  @media print {
+    body { background: white; color: #1e293b; padding: 20px; }
+    .badge, .step-number { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .workflow-step { border-color: #e2e8f0; }
+    .workflow-step::before { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .ref-card { border-color: #e2e8f0; }
+    .clear-section { border-color: #c7d2fe; background: #f5f3ff; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="badge">Lesson 13 - Companion Resource</div>
+      <h1>Project Workflow Checklist</h1>
+      <p>Follow this for every project. Same workflow. Gets faster every time.</p>
+    </div>
+
+    <div class="workflow">
+      <!-- Step 1: Plan -->
+      <div class="workflow-step step-plan">
+        <div class="step-header">
+          <div class="step-number">1</div>
+          <div class="step-title">PLAN</div>
+          <div class="step-mode mode-plan">Plan Mode</div>
+        </div>
+        <ul class="checklist">
+          <li><div class="check"></div>Switch to Plan Mode (Shift+Tab)</li>
+          <li><div class="check"></div>Describe what you want to build in plain English</li>
+          <li><div class="check"></div>If existing project: "Read this project and tell me what you see"</li>
+          <li><div class="check"></div>Ask Claude to propose an approach with numbered steps</li>
+          <li><div class="check"></div>Review the plan. Edit if needed (Ctrl+G)</li>
+        </ul>
+        <div class="step-tip"><strong>Don't skip this.</strong> Five minutes of planning saves thirty minutes of undoing.</div>
+      </div>
+
+      <!-- Step 2: Configure -->
+      <div class="workflow-step step-configure">
+        <div class="step-header">
+          <div class="step-number">2</div>
+          <div class="step-title">CONFIGURE</div>
+          <div class="step-mode mode-plan">Plan Mode</div>
+        </div>
+        <ul class="checklist">
+          <li><div class="check"></div>Create or update CLAUDE.md for this project</li>
+          <li><div class="check"></div>Include: project overview, communication style, rules</li>
+          <li><div class="check"></div>Add business context (audience, offers, tone)</li>
+          <li><div class="check"></div>Create CLAUDE.local.md for private info (API keys, client names)</li>
+        </ul>
+      </div>
+
+      <!-- Step 3: Build -->
+      <div class="workflow-step step-build">
+        <div class="step-header">
+          <div class="step-number">3</div>
+          <div class="step-title">BUILD</div>
+          <div class="step-mode mode-normal">Normal Mode</div>
+        </div>
+        <ul class="checklist">
+          <li><div class="check"></div>Switch to Normal Mode (Shift+Tab)</li>
+          <li><div class="check"></div>Reference the plan: "Execute the plan. Start with step one."</li>
+          <li><div class="check"></div>Review each change as it happens</li>
+          <li><div class="check"></div>Use subagents for independent parallel tasks</li>
+          <li><div class="check"></div>Commit progress after each major milestone</li>
+        </ul>
+        <div class="step-tip"><strong>The loop:</strong> Prompt > Review > Refine > Repeat. Don't just let it run.</div>
+      </div>
+
+      <!-- Step 4: Test -->
+      <div class="workflow-step step-test">
+        <div class="step-header">
+          <div class="step-number">4</div>
+          <div class="step-title">TEST</div>
+          <div class="step-mode mode-normal">Normal Mode</div>
+        </div>
+        <ul class="checklist">
+          <li><div class="check"></div>Ask Claude to create test data if needed</li>
+          <li><div class="check"></div>Run it and check the output yourself</li>
+          <li><div class="check"></div>Try to break it (bad input, edge cases)</li>
+          <li><div class="check"></div>Be specific about bugs: what happened vs. what you expected</li>
+          <li><div class="check"></div>Re-test after each fix</li>
+        </ul>
+        <div class="step-tip"><strong>Actually test.</strong> Open it in a browser. Run the script. Click the buttons.</div>
+      </div>
+
+      <!-- Step 5: Ship -->
+      <div class="workflow-step step-ship">
+        <div class="step-header">
+          <div class="step-number">5</div>
+          <div class="step-title">SHIP</div>
+          <div class="step-mode mode-normal">Normal Mode</div>
+        </div>
+        <ul class="checklist">
+          <li><div class="check"></div>Final review of all changes</li>
+          <li><div class="check"></div>Commit with descriptive message</li>
+          <li><div class="check"></div>Deploy if applicable</li>
+          <li><div class="check"></div>Update project notes with what was completed</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Quick Reference Cards -->
+    <div class="ref-grid">
+      <div class="ref-card">
+        <h3><span class="dot" style="background: #10b981;"></span>Git Quick Reference</h3>
+        <table>
+          <tr><th>What You Want</th><th>What to Say</th></tr>
+          <tr><td>Save progress</td><td>"Commit this with message '[what you did]'"</td></tr>
+          <tr><td>Undo changes</td><td>Type <span class="kbd">/rewind</span></td></tr>
+          <tr><td>Try something risky</td><td>"Create branch called 'test-idea'"</td></tr>
+          <tr><td>Go back to safe</td><td>"Switch back to main"</td></tr>
+          <tr><td>See what changed</td><td>"Show me modified files"</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-card">
+        <h3><span class="dot" style="background: #6366f1;"></span>Subagent Quick Reference</h3>
+        <table>
+          <tr><th>What You Want</th><th>What to Say</th></tr>
+          <tr><td>Delegate a task</td><td>"Use a subagent to handle [task]"</td></tr>
+          <tr><td>Research something</td><td>"Use an explore subagent to investigate [topic]"</td></tr>
+          <tr><td>Parallel work</td><td>"Handle [A] while a subagent works on [B]"</td></tr>
+          <tr><td>When to use</td><td>Task can be done independently</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- When to /clear -->
+    <div class="clear-section">
+      <h3>When to /clear and Start Fresh</h3>
+      <div class="clear-signals">
+        <div class="signal">Claude's responses feel off or confused</div>
+        <div class="signal">You've pivoted from original direction</div>
+        <div class="signal">Conversation is very long</div>
+        <div class="signal">Starting a new phase of the project</div>
+      </div>
+      <p style="margin-top: 12px; font-size: 13px; color: #94a3b8;">Your files, CLAUDE.md, and git history are all preserved. /clear only resets the conversation.</p>
+    </div>
+
+    <div class="footer">
+      Zero to Automated &middot; Claude Code 101 &middot; Lesson 13 Companion Resource
+    </div>
+  </div>
+</body>
+</html>

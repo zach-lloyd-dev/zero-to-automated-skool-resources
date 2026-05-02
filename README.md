@@ -5,7 +5,7 @@ Companion resources for the **Claude Code 101** course in the Zero to Automated 
 ## What's Inside
 
 ### Skills (Lesson 11)
-9 ready-to-use Claude Code skills you can install with one command:
+8 ready-to-use Claude Code skills you can install with one command:
 
 | Skill | What It Does |
 |-------|-------------|
@@ -17,7 +17,6 @@ Companion resources for the **Claude Code 101** course in the Zero to Automated 
 | `/self-interview` | Guided questions to clarify your thinking on any decision |
 | `/lead-magnet` | Create lead magnet concepts tailored to your offer |
 | `/onboarding-doc` | Build onboarding docs for contractors and team members |
-| `/zta-watch` | Watch any video (URL or local) — scene-diff frames + transcript handed to Claude. Needs `ffmpeg` + `yt-dlp` + Whisper key (Groq free tier covers most use). |
 
 ### Hooks (Lesson 12)
 4 hook configurations for automating Claude Code:
@@ -44,7 +43,7 @@ cd zero-to-automated-skool-resources
 bash install.sh
 ```
 
-This copies all 9 skills to `~/.claude/skills/`. Existing skills with the same name are not overwritten. The installer will also auto-run `/zta-watch`'s preflight to surface any missing dependencies (`ffmpeg`, `yt-dlp`, Whisper API key).
+This copies all 8 skills to `~/.claude/skills/`. Existing skills with the same name are not overwritten.
 
 ### Hooks (manual)
 

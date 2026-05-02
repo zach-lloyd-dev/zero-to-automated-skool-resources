@@ -24,7 +24,7 @@ echo "-------------------------"
 # Create skills directory if it doesn't exist
 mkdir -p "$SKILLS_DIR"
 
-SKILLS=(summarize meeting-notes research weekly-report business-case self-interview lead-magnet onboarding-doc)
+SKILLS=(summarize meeting-notes research weekly-report business-case self-interview lead-magnet onboarding-doc zta-watch)
 INSTALLED=0
 SKIPPED=0
 
@@ -34,11 +34,30 @@ for skill in "${SKILLS[@]}"; do
         SKIPPED=$((SKIPPED + 1))
     else
         mkdir -p "$SKILLS_DIR/$skill"
-        cp "$SCRIPT_DIR/skills/$skill/SKILL.md" "$SKILLS_DIR/$skill/SKILL.md"
+        # Skills with bundled scripts/commands/etc. need a recursive copy.
+        # Simple prompt-only skills only have SKILL.md. Detect by directory
+        # contents so we don't have to special-case each skill.
+        if [ -d "$SCRIPT_DIR/skills/$skill/scripts" ] || [ -d "$SCRIPT_DIR/skills/$skill/commands" ]; then
+            cp -R "$SCRIPT_DIR/skills/$skill/." "$SKILLS_DIR/$skill/"
+        else
+            cp "$SCRIPT_DIR/skills/$skill/SKILL.md" "$SKILLS_DIR/$skill/SKILL.md"
+        fi
         echo "  [ok]   /$skill installed"
         INSTALLED=$((INSTALLED + 1))
     fi
 done
+
+# zta-watch needs ffmpeg + yt-dlp. Run its preflight to surface any missing deps
+# now rather than waiting until the user invokes the skill the first time.
+if [ -f "$SKILLS_DIR/zta-watch/scripts/setup.py" ]; then
+    echo ""
+    echo "  Running /zta-watch preflight (checks for ffmpeg, yt-dlp, Whisper key)…"
+    if python3 "$SKILLS_DIR/zta-watch/scripts/setup.py" --check 2>&1 | sed 's/^/    /'; then
+        echo "  [ok]   /zta-watch ready"
+    else
+        echo "  [info] /zta-watch needs setup. Run: python3 $SKILLS_DIR/zta-watch/scripts/setup.py"
+    fi
+fi
 
 echo ""
 echo "  Skills: $INSTALLED installed, $SKIPPED skipped (already exist)"
@@ -94,6 +113,7 @@ echo "    /business-case   - Build ROI analysis for decisions"
 echo "    /self-interview  - Clarify your thinking with guided questions"
 echo "    /lead-magnet     - Create lead magnet concepts"
 echo "    /onboarding-doc  - Build contractor onboarding docs"
+echo "    /zta-watch       - Watch any video (needs ffmpeg + yt-dlp + Whisper key)"
 echo ""
 echo "  To test: open Claude Code and type /summarize"
 echo ""
